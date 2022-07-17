@@ -2,6 +2,7 @@ package tv.mapper.mapperbase.world;
 
 import java.util.List;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.CountPlacement;
@@ -52,7 +53,7 @@ public class BaseOreGenerator
 
                 if(generate)
                 {
-                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ore.getFeature());
+                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, Holder.direct(ore.getFeature()));
                 }
             }
         }
