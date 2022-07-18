@@ -53,7 +53,7 @@ public class BaseOreGenerator
 
                 if(generate)
                 {
-                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, Holder.direct(ore.getFeature()));
+                    event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ore.getFeature());
                 }
             }
         }

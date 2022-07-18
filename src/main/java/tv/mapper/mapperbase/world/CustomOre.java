@@ -2,6 +2,7 @@ package tv.mapper.mapperbase.world;
 
 import java.util.ArrayList;
 
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class CustomOre
@@ -13,9 +14,9 @@ public class CustomOre
 
     private ArrayList<String> biomeList;
 
-    private PlacedFeature placedFeature;
+    private Holder<PlacedFeature> placedFeature;
 
-    public CustomOre(String name, PlacedFeature feature, boolean generate, boolean whitelist, ArrayList<String> biomeList)
+    public CustomOre(String name, Holder<PlacedFeature> feature, boolean generate, boolean whitelist, ArrayList<String> biomeList)
     {
         this.name = name;
         this.allowGeneration = generate;
@@ -39,7 +40,7 @@ public class CustomOre
         return this.biomeList;
     }
 
-    public PlacedFeature getFeature()
+    public Holder<PlacedFeature> getFeature()
     {
         return this.placedFeature;
     }
