@@ -9,4 +9,4 @@
  
  Targeted Minecraft version: 1.18.x  
  Mod loader: Forge  
- Status: released for 1.17.1, WIP for 1.18.1
+ Status: Maintenace update for 1.18.2
