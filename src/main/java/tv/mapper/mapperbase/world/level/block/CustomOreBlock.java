@@ -1,12 +1,14 @@
 package tv.mapper.mapperbase.world.level.block;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.OreBlock;
+import net.minecraft.world.level.block.Block;
+
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CustomOreBlock extends OreBlock implements ToolManager
+public class CustomOreBlock extends Block implements ToolManager
 {
     private ToolTiers tier;
     private ToolTypes tool;
@@ -40,9 +42,10 @@ public class CustomOreBlock extends OreBlock implements ToolManager
         return this.tool;
     }
 
+
     @Override
-    public int getExpDrop(BlockState state, LevelReader reader, BlockPos pos, int fortune, int silktouch)
-    {
-        return silktouch == 0 ? this.xpRange.sample(RANDOM) : 0;
+    public int getExpDrop(BlockState state, net.minecraft.world.level.LevelReader world, RandomSource randomSource, BlockPos pos, int fortune, int silktouch) {
+        return silktouch == 0 ? 1 + randomSource.nextInt(5) : 0;
     }
+
 }

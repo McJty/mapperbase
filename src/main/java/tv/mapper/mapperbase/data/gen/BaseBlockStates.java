@@ -92,7 +92,7 @@ public class BaseBlockStates extends BlockStateProvider
 
     protected void rooftilesStairsBlock(StairBlock block, ResourceLocation texture)
     {
-        String baseName = block.getRegistryName().toString();
+        String baseName = block.getDescriptionId();
         ModelFile stairs = models().stairs(baseName, texture, texture, texture);
         ModelFile stairsInner = models().stairsInner(baseName + "_inner", texture, texture, texture);
         ModelFile stairsOuter = models().stairsOuter(baseName + "_outer", texture, texture, texture);
@@ -150,7 +150,7 @@ public class BaseBlockStates extends BlockStateProvider
         String modelName = "";
         for(int i = 1; i < 9; i++)
         {
-            modelName = i == 8 ? fullBlock.getRegistryName().getNamespace() + ":block/" + fullBlock.getRegistryName().getPath() : modid + ":block/" + name + "_slope_" + i * 2;
+            modelName = i == 8 ? fullBlock.getDescriptionId() + ":block/" + fullBlock.getDescriptionId() : modid + ":block/" + name + "_slope_" + i * 2;
             builder.partialState().with(SlopeBlock.LAYERS, i).modelForState().modelFile(new UncheckedModelFile(modelName)).addModel();
         }
     }
