@@ -15,7 +15,7 @@ public class ConfigChecker
         ArrayList<String> biome_verify = new ArrayList<>();
         for(Biome biome : ForgeRegistries.BIOMES)
         {
-            biome_verify.add(biome.getRegistryName().toString());
+            biome_verify.add( ForgeRegistries.BIOMES.getKey(biome).toString());
         }
 
         // Check if biomes listed in config exist

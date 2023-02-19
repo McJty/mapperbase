@@ -15,6 +15,7 @@ import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
@@ -51,8 +52,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import tv.mapper.mapperbase.MapperBase;
 import tv.mapper.mapperbase.world.level.block.CustomDoorBlock;
 
-public abstract class BaseLootTableProvider extends LootTableProvider
-{
+public abstract class BaseLootTableProvider extends LootTableProvider {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
@@ -64,115 +64,99 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 
     private final DataGenerator generator;
 
-    public BaseLootTableProvider(DataGenerator dataGeneratorIn)
-    {
+    public BaseLootTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
         this.generator = dataGeneratorIn;
     }
 
     protected abstract void addTables();
 
-    protected static <T> T withExplosionDecay(ItemLike p_218552_0_, FunctionUserBuilder<T> p_218552_1_)
-    {
-        return (T)(!IMMUNE_TO_EXPLOSIONS.contains(p_218552_0_.asItem()) ? p_218552_1_.apply(ApplyExplosionDecay.explosionDecay()) : p_218552_1_.unwrap());
+
+
+    protected static <T extends FunctionUserBuilder<T>> T withExplosionDecay(ItemLike p_218552_0_, FunctionUserBuilder<T> p_218552_1_) {
+        return (T) (!IMMUNE_TO_EXPLOSIONS.contains(p_218552_0_.asItem()) ? p_218552_1_.apply(ApplyExplosionDecay.explosionDecay()) : p_218552_1_.unwrap());
     }
 
-    protected static <T> T withSurvivesExplosion(ItemLike p_218560_0_, ConditionUserBuilder<T> p_218560_1_)
-    {
-        return (T)(!IMMUNE_TO_EXPLOSIONS.contains(p_218560_0_.asItem()) ? p_218560_1_.when(ExplosionCondition.survivesExplosion()) : p_218560_1_.unwrap());
+    protected static <T extends ConditionUserBuilder<T>> T withSurvivesExplosion(ItemLike p_218560_0_, ConditionUserBuilder<T> p_218560_1_) {
+        return (T) (!IMMUNE_TO_EXPLOSIONS.contains(p_218560_0_.asItem()) ? p_218560_1_.when(ExplosionCondition.survivesExplosion()) : p_218560_1_.unwrap());
     }
 
-    protected LootTable.Builder createStandardTable(String modid, Block block)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
+    protected LootTable.Builder createStandardTable(String modid, Block block) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
         LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block)).when(ExplosionCondition.survivesExplosion());
         return LootTable.lootTable().withPool(builder);
     }
 
-    protected LootTable.Builder createSlabTable(String modid, Block block)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
+    protected LootTable.Builder createSlabTable(String modid, Block block) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
         LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(withExplosionDecay(block, LootItem.lootTableItem(block).apply(SetItemCountFunction.setCount(ConstantValue.exactly(2)).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.DOUBLE))))));
         return LootTable.lootTable().withPool(builder);
     }
 
-    protected LootTable.Builder createDoorTable(String modid, Block block)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
+    protected LootTable.Builder createDoorTable(String modid, Block block) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
         LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(CustomDoorBlock.HALF, DoubleBlockHalf.LOWER)))).when(ExplosionCondition.survivesExplosion());
         return LootTable.lootTable().withPool(builder);
     }
 
-    protected LootTable.Builder createBedTable(String modid, Block block)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
+    protected LootTable.Builder createBedTable(String modid, Block block) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
         LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(BedBlock.PART, BedPart.HEAD)))).when(ExplosionCondition.survivesExplosion());
         return LootTable.lootTable().withPool(builder);
     }
 
-    protected LootTable.Builder createChestTable(String name, Block block)
-    {
+    protected LootTable.Builder createChestTable(String name, Block block) {
         LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(LootItem.lootTableItem(block).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))).when(ExplosionCondition.survivesExplosion());
         return LootTable.lootTable().withPool(builder);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected LootTable.Builder createSilkTable(String modid, Block block, Block loot)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
-        LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(((LootPoolSingletonContainer.Builder)LootItem.lootTableItem(block).when(SILK_TOUCH)).otherwise(withSurvivesExplosion(block, LootItem.lootTableItem(loot))));
+    protected LootTable.Builder createSilkTable(String modid, Block block, Block loot) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
+        LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(((LootPoolSingletonContainer.Builder) LootItem.lootTableItem(block).when(SILK_TOUCH)).otherwise(withSurvivesExplosion(block, LootItem.lootTableItem(loot))));
         return LootTable.lootTable().withPool(builder);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected LootTable.Builder createSilkTable(String modid, Block block, Item loot)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
-        LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(((LootPoolSingletonContainer.Builder)LootItem.lootTableItem(block).when(SILK_TOUCH)).otherwise(withSurvivesExplosion(block, LootItem.lootTableItem(loot))));
+    protected LootTable.Builder createSilkTable(String modid, Block block, Item loot) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
+        LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(((LootPoolSingletonContainer.Builder) LootItem.lootTableItem(block).when(SILK_TOUCH)).otherwise(withSurvivesExplosion(block, LootItem.lootTableItem(loot))));
         return LootTable.lootTable().withPool(builder);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected LootTable.Builder createSilkTable(String modid, Block block, Item loot, int min, int max, int fortune)
-    {
-        String name = block.getRegistryName().toString().replace(modid + ":", "");
-        LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(((LootPoolSingletonContainer.Builder)LootItem.lootTableItem(block).when(SILK_TOUCH)).otherwise(withSurvivesExplosion(block, LootItem.lootTableItem(loot).apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max))).apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, fortune)))));
+    protected LootTable.Builder createSilkTable(String modid, Block block, Item loot, int min, int max, int fortune) {
+        String name = block.getDescriptionId().replace(modid + ":", "");
+        LootPool.Builder builder = LootPool.lootPool().name(name).setRolls(ConstantValue.exactly(1)).add(((LootPoolSingletonContainer.Builder) LootItem.lootTableItem(block).when(SILK_TOUCH)).otherwise(withSurvivesExplosion(block, LootItem.lootTableItem(loot).apply(SetItemCountFunction.setCount(UniformGenerator.between(min, max))).apply(ApplyBonusCount.addUniformBonusCount(Enchantments.BLOCK_FORTUNE, fortune)))));
         return LootTable.lootTable().withPool(builder);
     }
 
     @Override
-    public void run(HashCache cache)
-    {
+    public void run(CachedOutput pOutput) {
         addTables();
 
         Map<ResourceLocation, LootTable> tables = new HashMap<>();
-        for(Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet())
-        {
+        for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet()) {
             tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootContextParamSets.BLOCK).build());
         }
-        writeTables(cache, tables);
+        writeTables(pOutput, tables);
     }
 
-    private void writeTables(HashCache cache, Map<ResourceLocation, LootTable> tables)
-    {
+    private void writeTables(CachedOutput pOutput, Map<ResourceLocation, LootTable> tables) {
         Path outputFolder = this.generator.getOutputFolder();
         tables.forEach((key, lootTable) ->
         {
             Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
-            try
-            {
-                DataProvider.save(GSON, cache, LootTables.serialize(lootTable), path);
-            }
-            catch(IOException e)
-            {
+            try {
+                DataProvider.saveStable(pOutput,LootTables.serialize(lootTable), path);
+            } catch (IOException e) {
                 MapperBase.LOGGER.error("Couldn't write loot table {}", path, e);
             }
         });
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return "MapperBase LootTables";
     }
 }

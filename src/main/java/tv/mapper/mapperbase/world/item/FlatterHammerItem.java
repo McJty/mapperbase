@@ -36,18 +36,18 @@ public class FlatterHammerItem extends Item
         return false;
     }
 
-    @Override
-    public ItemStack getContainerItem(@Nonnull ItemStack stack)
-    {
-        ItemStack hammer = stack.copy();
-        int damage = hammer.getDamageValue();
+  // @Override
+  // public ItemStack getContainerItem(@Nonnull ItemStack stack)
+  // {
+  //     ItemStack hammer = stack.copy();
+  //     int damage = hammer.getDamageValue();
 
-        if(damage < hammer.getMaxDamage())
-        {
-            hammer.setDamageValue(damage + 1);
-            return hammer;
-        }
-        else
-            return ItemStack.EMPTY;
-    }
+  //     if(damage < hammer.getMaxDamage())
+  //     {
+  //         hammer.setDamageValue(damage + 1);
+  //         return hammer;
+  //     }
+  //     else
+  //         return ItemStack.EMPTY;
+  // }
 }

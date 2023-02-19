@@ -78,7 +78,7 @@ public class BaseRecipes extends RecipeProvider
 
     protected void basicRecipes(Consumer<FinishedRecipe> consumer, Block base, Block slab, Block stairs, Block wall, Block pressure, Block button, Block fence, Block fence_gate)
     {
-        String base_name = base.getRegistryName().getPath();
+        String base_name = base.getDescriptionId();
 
         if(slab != null)
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(base), slab, 2).unlockedBy("has_" + base_name, has(base)).save(consumer, base_name + "_slab_from_" + base_name + "_stonecutting");
