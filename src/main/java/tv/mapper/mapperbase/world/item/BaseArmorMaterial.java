@@ -1,16 +1,15 @@
 package tv.mapper.mapperbase.world.item;
 
-import java.util.function.Supplier;
-
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import tv.mapper.mapperbase.MapperBase;
+
+import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
 public enum BaseArmorMaterial implements ArmorMaterial
@@ -40,6 +39,7 @@ public enum BaseArmorMaterial implements ArmorMaterial
         this.repairMaterial = new LazyLoadedValue<>(repairMaterialSupplier);
     }
 
+
     public int getDurabilityForSlot(EquipmentSlot slotIn)
     {
         return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.maxDamageFactor;
@@ -48,6 +48,16 @@ public enum BaseArmorMaterial implements ArmorMaterial
     public int getDefenseForSlot(EquipmentSlot slotIn)
     {
         return this.damageReductionAmountArray[slotIn.getIndex()];
+    }
+
+    @Override
+    public int getDurabilityForType(ArmorItem.Type type) {
+        return MAX_DAMAGE_ARRAY[type.getSlot().getIndex()] * this.maxDamageFactor;
+    }
+
+    @Override
+    public int getDefenseForType(ArmorItem.Type type) {
+        return this.damageReductionAmountArray[type.getSlot().getIndex()];
     }
 
     public int getEnchantmentValue()
@@ -65,7 +75,6 @@ public enum BaseArmorMaterial implements ArmorMaterial
         return this.repairMaterial.get();
     }
 
-    @OnlyIn(Dist.CLIENT)
     public String getName()
     {
         return MapperBase.MODID + ":" + this.name;

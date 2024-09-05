@@ -3,6 +3,7 @@ package tv.mapper.mapperbase.world.level.block;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 public class CustomButtonBlock extends ButtonBlock implements ToolManager
 {
@@ -10,16 +11,16 @@ public class CustomButtonBlock extends ButtonBlock implements ToolManager
     protected ToolTiers tier;
     protected ToolTypes tool;
 
-    public CustomButtonBlock(boolean isWooden, Properties properties, ToolTypes tool)
+    public CustomButtonBlock(boolean isWooden, Properties properties, BlockSetType type, ToolTypes tool)
     {
-        super(isWooden, properties);
+        super(properties, type, 20, false);
         this.tool = tool;
         this.tier = ToolTiers.WOOD;
     }
 
-    public CustomButtonBlock(boolean isWooden, Properties properties, ToolTypes tool, ToolTiers tier)
+    public CustomButtonBlock(boolean isWooden, Properties properties, BlockSetType type, ToolTypes tool, ToolTiers tier)
     {
-        super(isWooden, properties);
+        super(properties, type, 20, false);
         this.tool = tool;
         this.tier = tier;
     }
