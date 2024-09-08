@@ -11,7 +11,7 @@ public class BaseLang extends LanguageProvider
 
     public BaseLang(DataGenerator generator, String modid, String lang)
     {
-        super(generator, modid, lang);
+        super(generator.getPackOutput(), modid, lang);
         this.lang = lang;
     }
 

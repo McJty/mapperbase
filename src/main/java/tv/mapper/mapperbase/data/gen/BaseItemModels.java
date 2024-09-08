@@ -9,7 +9,7 @@ public class BaseItemModels extends ItemModelProvider
 {
     public BaseItemModels(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper)
     {
-        super(generator, modid, existingFileHelper);
+        super(generator.getPackOutput(), modid, existingFileHelper);
     }
 
     @Override

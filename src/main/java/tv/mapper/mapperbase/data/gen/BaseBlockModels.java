@@ -9,7 +9,7 @@ public class BaseBlockModels extends BlockModelProvider
 {
     public BaseBlockModels(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper)
     {
-        super(generator, modid, existingFileHelper);
+        super(generator.getPackOutput(), modid, existingFileHelper);
     }
 
     @Override

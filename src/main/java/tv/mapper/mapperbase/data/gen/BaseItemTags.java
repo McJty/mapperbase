@@ -1,6 +1,8 @@
 package tv.mapper.mapperbase.data.gen;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -10,15 +12,17 @@ import tv.mapper.mapperbase.MapperBase;
 import tv.mapper.mapperbase.data.BaseTags;
 import tv.mapper.mapperbase.world.item.BaseItems;
 
+import java.util.concurrent.CompletableFuture;
+
 public class BaseItemTags extends ItemTagsProvider
 {
-    public BaseItemTags(DataGenerator generatorIn, BaseBlockTags blockTagProvider, ExistingFileHelper existingFileHelper)
+    public BaseItemTags(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> generatorIn, BaseBlockTags blockTagProvider, ExistingFileHelper existingFileHelper)
     {
-        super(generatorIn, blockTagProvider, MapperBase.MODID, existingFileHelper);
+        super(packOutput, generatorIn, blockTagProvider.contentsGetter(), MapperBase.MODID, existingFileHelper);
     }
 
-    public void addTags()
-    {
+    @Override
+    protected void addTags(HolderLookup.Provider pProvider) {
         copy(BlockTags.STAIRS, ItemTags.STAIRS);
         copy(BlockTags.SLABS, ItemTags.SLABS);
         copy(BlockTags.WALLS, ItemTags.WALLS);

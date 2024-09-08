@@ -34,7 +34,7 @@ public class BaseBlockStates extends BlockStateProvider
 
     public BaseBlockStates(DataGenerator gen, String modid, ExistingFileHelper exFileHelper)
     {
-        super(gen, modid, exFileHelper);
+        super(gen.getPackOutput(), modid, exFileHelper);
         this.mod_id = modid;
     }
 
