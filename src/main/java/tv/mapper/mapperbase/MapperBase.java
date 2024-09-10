@@ -58,7 +58,7 @@ public class MapperBase
     {}
 
     public static RegistryObject<CreativeModeTab> TAB = TABS.register("mapperbase_group", () -> CreativeModeTab.builder()
-            .title(Component.translatable("tab.tutpower"))
+            .title(Component.translatable("itemGroup.mapperbase_group"))
             .icon(() -> new ItemStack(BaseItems.STEEL_INGOT.get()))
             .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
             .displayItems((featureFlags, output) -> {
